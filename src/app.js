@@ -14,29 +14,33 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://gatepreppro.vercel.app",
+  "https://www.gatepreppro.vercel.app",
   "https://gatepreppro.in",
   "https://www.gatepreppro.in",
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true); // allow Postman / server calls
+    origin: (origin, callback) => {
+      // Allow server-to-server / Postman / Render health checks
+      if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
+      // Allow Vercel preview & prod subdomains
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith(".vercel.app")
+      ) {
+        return callback(null, true);
       }
+
+      // Reject silently (NO error throw)
+      return callback(null, false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// IMPORTANT: handle preflight
-app.options("*", cors());
 
 
 app.use(express.json({ limit: "10mb" }));
