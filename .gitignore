@@ -1,0 +1,15 @@
+drive-service-account.json
+node_modules
+dist
+.env
+.DS_Store
+.vscode
+.idea
+*.log
+coverage
+*.tsbuildinfo
+.cache
+.next
+out
+firebase-debug.log*
+firebase.json
