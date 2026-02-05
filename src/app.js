@@ -13,7 +13,7 @@ const app = express();
 /* ---------------- Global Middleware ---------------- */
 app.use(
   cors({
-    origin: ["http://localhost:5173"], // frontend URL
+    origin: ["http://localhost:5173", "http://gatepreppro.vercel.app", "https://gatepreppro.vercel.app",  "https://gatepreppro.in"], // frontend URL
     credentials: true,
   })
 );
