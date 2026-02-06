@@ -7,6 +7,9 @@ import authRoutes from "./routes/auth.routes.js";
 import resourceRoutes from "./routes/resource.routes.js";
 import purchaseRoutes from "./routes/purchase.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import testSeriesRoutes from "./routes/testSeries.routes.js";
+import adminTestSeriesRoutes from "./routes/adminTestSeries.routes.js";
+
 
 const app = express();
 
@@ -62,6 +65,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/resources", resourceRoutes);
 app.use("/api/purchase", purchaseRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/test-series", testSeriesRoutes);
+app.use("/api/admin", adminTestSeriesRoutes);
+
 
 /* ---------------- 404 Handler ---------------- */
 app.use((req, res) => {

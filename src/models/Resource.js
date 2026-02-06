@@ -18,7 +18,13 @@ const resourceSchema = new mongoose.Schema(
       default: "https://via.placeholder.com/400x250",
     },
 
-    driveFileId: { type: String, required: true },
+    driveFileId: {
+      type: String,
+      required: function () {
+        return this.type !== "test-series-pack";
+      },
+    },
+
 
     type: {
       type: String,

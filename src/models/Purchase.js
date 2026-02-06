@@ -7,12 +7,15 @@ const purchaseSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
     resource: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Resource",
-      required: true,
     },
+    testSeriesPack: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TestSeriesPack",
+    },
+
 
     status: {
       type: String,
