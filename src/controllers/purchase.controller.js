@@ -28,6 +28,39 @@ export const createPurchase = async (req, res) => {
 
 
 
+// export const createWebsitePurchase = async (req, res) => {
+//   try {
+//     const { resourceId } = req.body;
+
+//     if (!resourceId || !req.file) {
+//       return res.status(400).json({
+//         message: "Screenshot is required for payment verification",
+//       });
+//     }
+
+
+//     const screenshotPath = req.file
+//       ? `/uploads/screenshots/${req.file.filename}`
+//       : null;
+
+//     const purchase = await Purchase.create({
+//       user: req.user._id,
+//       resource: resourceId,
+//       screenshot: screenshotPath,
+//       status: "pending",
+//     });
+
+//     res.status(201).json({
+//       message:
+//         "Payment submitted successfully. You will get access within 10 minutes after verification.",
+//       purchaseId: purchase._id,
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
+
 export const createWebsitePurchase = async (req, res) => {
   try {
     const { resourceId } = req.body;
@@ -38,15 +71,13 @@ export const createWebsitePurchase = async (req, res) => {
       });
     }
 
-
-    const screenshotPath = req.file
-      ? `/uploads/screenshots/${req.file.filename}`
-      : null;
+    // 🔥 Cloudinary gives a secure URL
+    const screenshotUrl = req.file.path;
 
     const purchase = await Purchase.create({
       user: req.user._id,
       resource: resourceId,
-      screenshot: screenshotPath,
+      screenshot: screenshotUrl,
       status: "pending",
     });
 
@@ -56,9 +87,11 @@ export const createWebsitePurchase = async (req, res) => {
       purchaseId: purchase._id,
     });
   } catch (err) {
+    console.error("Create Website Purchase Error:", err);
     res.status(500).json({ message: err.message });
   }
 };
+
 
 export const getMyPurchases = async (req, res) => {
   try {

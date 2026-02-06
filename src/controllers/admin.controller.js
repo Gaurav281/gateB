@@ -2,8 +2,47 @@ import User from "../models/User.js";
 import Resource from "../models/Resource.js";
 import Purchase from "../models/Purchase.js";
 import { sendEmail } from "../utils/mailer.js";
-import fs from "fs";
-import path from "path";
+// import fs from "fs";
+// import path from "path";
+import cloudinary from "../config/cloudinary.js";
+
+// export const deletePurchaseScreenshot = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     const purchase = await Purchase.findById(id);
+
+//     if (!purchase || !purchase.screenshot) {
+//       return res.status(404).json({
+//         message: "Screenshot not found",
+//       });
+//     }
+
+//     // 🔥 FIX: remove leading slash
+//     const relativePath = purchase.screenshot.startsWith("/")
+//       ? purchase.screenshot.slice(1)
+//       : purchase.screenshot;
+
+//     const filePath = path.join(process.cwd(), relativePath);
+
+//     // Check if file exists
+//     if (fs.existsSync(filePath)) {
+//       fs.unlinkSync(filePath);
+//     } else {
+//       console.warn("Screenshot file not found on disk:", filePath);
+//     }
+
+//     purchase.screenshot = null;
+//     await purchase.save();
+
+//     res.status(200).json({
+//       message: "Screenshot deleted successfully",
+//     });
+//   } catch (err) {
+//     console.error("Delete Screenshot Error:", err);
+//     res.status(500).json({ message: err.message });
+//   }
+// };
 
 export const deletePurchaseScreenshot = async (req, res) => {
   try {
@@ -17,19 +56,18 @@ export const deletePurchaseScreenshot = async (req, res) => {
       });
     }
 
-    // 🔥 FIX: remove leading slash
-    const relativePath = purchase.screenshot.startsWith("/")
-      ? purchase.screenshot.slice(1)
-      : purchase.screenshot;
+    /**
+     * screenshot is a Cloudinary URL
+     * Example:
+     * https://res.cloudinary.com/xxx/image/upload/v12345/gatepreppro/screenshots/abc.jpg
+     */
+    const publicId = purchase.screenshot
+      .split("/")
+      .slice(-2) // folder + filename
+      .join("/")
+      .split(".")[0]; // remove extension
 
-    const filePath = path.join(process.cwd(), relativePath);
-
-    // Check if file exists
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    } else {
-      console.warn("Screenshot file not found on disk:", filePath);
-    }
+    await cloudinary.uploader.destroy(publicId);
 
     purchase.screenshot = null;
     await purchase.save();
@@ -42,8 +80,6 @@ export const deletePurchaseScreenshot = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-
 
 
 /* =======================
